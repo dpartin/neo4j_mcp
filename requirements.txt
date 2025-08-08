@@ -1,0 +1,27 @@
+# Core Framework
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+
+# Validation & Schema
+jsonschema==4.20.0
+
+# Neo4j Integration
+neo4j==5.14.1
+
+# Optional: Alternative Neo4j library
+# py2neo==2023.3.0
+
+# Development & Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+httpx==0.25.2
+
+# Configuration & Environment
+python-dotenv==1.0.0
+pydantic==2.5.0
+
+# Logging & Monitoring
+structlog==23.2.0
+
+# Security
+python-multipart==0.0.6

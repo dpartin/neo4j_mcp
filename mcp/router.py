@@ -1,27 +1,71 @@
 # mcp/router.py
 
+import logging
 from fastapi import APIRouter, Request, HTTPException
 from mcp.validator import validate_message
+from mcp.neo4j_client import neo4j_client
 
 import uuid
 from datetime import datetime
 
-
+logger = logging.getLogger(__name__)
 router = APIRouter()
 
-# Stub handlers for demonstration
+# Neo4j handlers with actual implementation
 async def handle_neo4j_create_node(payload: dict):
-    # TODO: implement Neo4j creation logic
-    return {"status": "success", "detail": "node created"}
+    """Handle node creation requests."""
+    try:
+        labels = payload.get("labels", [])
+        properties = payload.get("properties", {})
+        
+        if not properties:
+            raise ValueError("Node properties are required")
+        
+        result = await neo4j_client.create_node(labels, properties)
+        return result
+    except Exception as e:
+        logger.error(f"Error in create_node handler: {e}")
+        return {"status": "error", "message": str(e)}
 
 async def handle_run_cypher_query(payload: dict):
-    # TODO: implement Cypher query logic
-    return {"status": "success", "results": []}
+    """Handle Cypher query execution requests."""
+    try:
+        query = payload.get("query")
+        parameters = payload.get("parameters", {})
+        
+        if not query:
+            raise ValueError("Cypher query is required")
+        
+        result = await neo4j_client.run_cypher_query(query, parameters)
+        return result
+    except Exception as e:
+        logger.error(f"Error in run_cypher_query handler: {e}")
+        return {"status": "error", "message": str(e)}
+
+async def handle_neo4j_create_relationship(payload: dict):
+    """Handle relationship creation requests."""
+    try:
+        from_node_id = payload.get("from_node_id")
+        to_node_id = payload.get("to_node_id")
+        rel_type = payload.get("rel_type")
+        properties = payload.get("properties", {})
+        
+        if not all([from_node_id, to_node_id, rel_type]):
+            raise ValueError("from_node_id, to_node_id, and rel_type are required")
+        
+        result = await neo4j_client.create_relationship(
+            from_node_id, to_node_id, rel_type, properties
+        )
+        return result
+    except Exception as e:
+        logger.error(f"Error in create_relationship handler: {e}")
+        return {"status": "error", "message": str(e)}
 
 # Map (target, action) to handler functions
 HANDLERS = {
     ("neo4j", "create_node"): handle_neo4j_create_node,
     ("neo4j", "run_cypher_query"): handle_run_cypher_query,
+    ("neo4j", "create_relationship"): handle_neo4j_create_relationship,
 }
 
 @router.post("/mcp/message")
