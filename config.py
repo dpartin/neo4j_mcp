@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     # Neo4j Configuration
     neo4j_uri: str = "bolt://localhost:7687"
     neo4j_user: str = "neo4j"
-    neo4j_password: str = "password"
+    neo4j_password: str = "password"  # Should be overridden in production
     neo4j_database: str = "neo4j"
     
     # Server Configuration
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     log_level: str = "INFO"
     
     # Security
-    secret_key: str = "your-secret-key-here"
+    secret_key: str = "your-secret-key-here-change-in-production"
     access_token_expire_minutes: int = 30
     
     class Config:

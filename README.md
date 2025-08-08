@@ -50,6 +50,10 @@ This project defines a JSON-based MCP schema for structured messaging between ag
 2. **Set up environment variables:**
 
    ```bash
+   # Option 1: Generate secure credentials automatically
+   python scripts/generate_secrets.py
+   
+   # Option 2: Manual setup
    cp env.example .env
    # Edit .env with your Neo4j credentials
    ```
@@ -198,13 +202,28 @@ neo4j_mcp/
 
 ## Configuration
 
-Environment variables can be set in a `.env` file:
+Environment variables can be set in a `.env` file. For security, never commit the `.env` file to version control.
+
+### Security Setup
+
+1. **Generate secure credentials:**
+   ```bash
+   python scripts/generate_secrets.py
+   ```
+
+2. **Manual configuration:**
+   ```bash
+   cp env.example .env
+   # Edit .env with your secure credentials
+   ```
+
+### Environment Variables
 
 ```bash
 # Neo4j Configuration
 NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
-NEO4J_PASSWORD=password
+NEO4J_PASSWORD=your-secure-password-here
 NEO4J_DATABASE=neo4j
 
 # Server Configuration
@@ -216,9 +235,17 @@ DEBUG=false
 LOG_LEVEL=INFO
 
 # Security
-SECRET_KEY=your-secret-key-here
+SECRET_KEY=your-secret-key-here-change-in-production
 ACCESS_TOKEN_EXPIRE_MINUTES=30
 ```
+
+### Security Best Practices
+
+- ✅ **Never commit `.env` files** to version control
+- ✅ **Use different credentials** for each environment (dev, staging, prod)
+- ✅ **Generate secure passwords** using the provided script
+- ✅ **Rotate credentials regularly** in production
+- ✅ **Use environment-specific configurations** for Docker deployments
 
 ## Next Steps
 
